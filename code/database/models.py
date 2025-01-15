@@ -3,7 +3,7 @@ from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
 
-class Raw(Base):
+class Raws(Base):
     __tablename__ = "raws"
     id = Column(String(32), primary_key=True)
     name = Column(String(96), nullable=False)

@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Float, ForeignKey
+from sqlalchemy import Column, String, Float, ForeignKey, DateTime, func
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
@@ -32,3 +32,12 @@ class Sauces(Base):
     salt = Column(Float, nullable=False)
     recipe = Column(String(500), nullable=False, default="onion:70, tomatoes:400")
     final_amount_in_grams = Column(Float, nullable=False)
+
+class DietEntry(Base):
+    __tablename__ = "dietentry"
+    id = Column(String(32), primary_key=True)
+    added_at = Column(DateTime, default=func.now())
+    entry_type = Column(String(20))
+    food_id = Column(String(32))
+    food_amount_in_grams = Column(Float)
+    weigh = Column(Float)

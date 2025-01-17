@@ -1,5 +1,6 @@
 from typing import List
 
+from datetime import datetime
 from pydantic import BaseModel, Field
 
 
@@ -32,4 +33,14 @@ class SaucesModel(BaseModel):
         arbitrary_types_allowed = True
 
 class SaucesResponseModel(SaucesModel):
+    id: str
+
+class DietEntryModel(BaseModel):
+    added_at: datetime
+    entry_type: str
+    food_id: str
+    food_amount_in_grams: float
+    weigh: float
+
+class DietEntryResponseModel(DietEntryModel):
     id: str

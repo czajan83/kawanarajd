@@ -34,7 +34,7 @@ def create_sauce(body: SaucesModel, db: Session) -> SaucesResponseModel:
     sauce = search_sauce_by_name(body.name, db)
     amount_sum = body.final_amount_in_grams
     if sauce is None:
-        id_raw = uuid.uuid4().hex
+        id_sauce = uuid.uuid4().hex
         kcal_100g = fat = saturated_fat = carbohydrates = simple_sugars = fiber = proteins = salt = 0
         recipe = f""
         for ingredient in body.ingredients:
@@ -51,7 +51,7 @@ def create_sauce(body: SaucesModel, db: Session) -> SaucesResponseModel:
                 salt += raw.salt * amount
                 recipe += f"{ingredient.id}: {ingredient.amount_in_grams:.1f}, "
 
-        sauce_db = Sauces(id=id_raw,
+        sauce_db = Sauces(id=id_sauce,
                           name=body.name,
                           kcal_100g=kcal_100g/amount_sum,
                           fat=fat/amount_sum,
@@ -69,7 +69,7 @@ def create_sauce(body: SaucesModel, db: Session) -> SaucesResponseModel:
         db.commit()
         db.refresh(sauce_db)
 
-        sauce_http = SaucesResponseModel(id=id_raw,
+        sauce_http = SaucesResponseModel(id=id_sauce,
                                          name=body.name,
                                          ingredients=body.ingredients,
                                          final_amount_in_grams=body.final_amount_in_grams
@@ -81,6 +81,54 @@ def create_sauce(body: SaucesModel, db: Session) -> SaucesResponseModel:
                                          final_amount_in_grams=body.final_amount_in_grams
         )
     return sauce_http
+
+def update_sauce(sauce_id: str, body: SaucesModel, db: Session) -> SaucesResponseModel | int:
+    sauce = search_sauce_by_id(sauce_id, db)
+    amount_sum = body.final_amount_in_grams
+    if sauce is not None:
+        if sauce.name != body.name:
+            return -2
+        kcal_100g = fat = saturated_fat = carbohydrates = simple_sugars = fiber = proteins = salt = 0
+        recipe = f""
+        for ingredient in body.ingredients:
+            raw = rep_raws.search_raw_by_id(ingredient.id, db)
+            if raw is not None:
+                amount = ingredient.amount_in_grams
+                kcal_100g += raw.kcal_100g * amount
+                fat += raw.fat * amount
+                saturated_fat += raw.saturated_fat * amount
+                carbohydrates += raw.carbohydrates * amount
+                simple_sugars += raw.simple_sugars * amount
+                fiber += raw.fiber * amount
+                proteins += raw.proteins * amount
+                salt += raw.salt * amount
+                recipe += f"{ingredient.id}: {ingredient.amount_in_grams:.1f}, "
+        sauce.kcal_100g=kcal_100g/amount_sum
+        sauce.fat=fat/amount_sum
+        sauce.saturated_fat=saturated_fat/amount_sum
+        sauce.carbohydrates=carbohydrates/amount_sum
+        sauce.simple_sugars=simple_sugars/amount_sum
+        sauce.fiber=fiber/amount_sum
+        sauce.proteins=proteins/amount_sum
+        sauce.salt=salt/amount_sum
+        db.commit()
+        sauce_http = SaucesResponseModel(id=sauce.id,
+                                         name=body.name,
+                                         ingredients=body.ingredients,
+                                         final_amount_in_grams=body.final_amount_in_grams
+        )
+        return sauce_http
+    return -1
+
+def remove_sauce(sauce_id: str, body: SaucesModel, db: Session) -> int | None:
+    existing_sauce = search_sauce_by_id(sauce_id, db)
+    if existing_sauce is not None:
+        if existing_sauce.name != body.name:
+            return -2
+        db.delete(existing_sauce)
+        db.commit()
+        return 0
+    return -1
 
 def search_sauce_by_id(sauce_id: str, db: Session) -> Type[Sauces] | None:
     existing_sauces = db.query(Sauces).all()

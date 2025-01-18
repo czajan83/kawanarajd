@@ -36,11 +36,11 @@ class SaucesResponseModel(SaucesModel):
     id: str
 
 class DietEntryModel(BaseModel):
-    added_at: datetime
+    added_at: str
     entry_type: str
     food_id: str
     food_amount_in_grams: float
-    weigh: float
+    weight_in_kilograms: float
 
 class DietEntryResponseModel(DietEntryModel):
     id: str

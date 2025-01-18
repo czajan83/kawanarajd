@@ -1,6 +1,5 @@
 from sqlalchemy import Column, String, Float, ForeignKey, DateTime, func
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship
 
 Base = declarative_base()
 
@@ -36,8 +35,8 @@ class Sauces(Base):
 class DietEntry(Base):
     __tablename__ = "dietentry"
     id = Column(String(32), primary_key=True)
-    added_at = Column(DateTime, default=func.now())
+    added_at = Column(String(24))
     entry_type = Column(String(20))
     food_id = Column(String(32))
     food_amount_in_grams = Column(Float)
-    weigh = Column(Float)
+    weight_in_kilograms = Column(Float)

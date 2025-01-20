@@ -5,7 +5,6 @@ from sqlalchemy.orm import Session
 
 from code.database.models import Sauces
 from code.http.models import SaucesModel, SaucesResponseModel, Ingredient
-from code.repository import raws as rep_raws
 
 
 def get_sauces(db: Session) -> List[SaucesResponseModel]:
@@ -37,19 +36,6 @@ def create_sauce(body: SaucesModel, db: Session) -> SaucesResponseModel:
         id_sauce = uuid.uuid4().hex
         kcal_100g = fat = saturated_fat = carbohydrates = simple_sugars = fiber = proteins = salt = 0
         recipe = f""
-        for ingredient in body.ingredients:
-            raw = rep_raws.search_raw_by_id(ingredient.id, db)
-            if raw is not None:
-                amount = ingredient.amount_in_grams
-                kcal_100g += raw.kcal_100g * amount
-                fat += raw.fat * amount
-                saturated_fat += raw.saturated_fat * amount
-                carbohydrates += raw.carbohydrates * amount
-                simple_sugars += raw.simple_sugars * amount
-                fiber += raw.fiber * amount
-                proteins += raw.proteins * amount
-                salt += raw.salt * amount
-                recipe += f"{ingredient.id}: {ingredient.amount_in_grams:.1f}, "
 
         sauce_db = Sauces(id=id_sauce,
                           name=body.name,
@@ -89,20 +75,6 @@ def update_sauce(sauce_id: str, body: SaucesModel, db: Session) -> SaucesRespons
         if sauce.name != body.name:
             return -2
         kcal_100g = fat = saturated_fat = carbohydrates = simple_sugars = fiber = proteins = salt = 0
-        recipe = f""
-        for ingredient in body.ingredients:
-            raw = rep_raws.search_raw_by_id(ingredient.id, db)
-            if raw is not None:
-                amount = ingredient.amount_in_grams
-                kcal_100g += raw.kcal_100g * amount
-                fat += raw.fat * amount
-                saturated_fat += raw.saturated_fat * amount
-                carbohydrates += raw.carbohydrates * amount
-                simple_sugars += raw.simple_sugars * amount
-                fiber += raw.fiber * amount
-                proteins += raw.proteins * amount
-                salt += raw.salt * amount
-                recipe += f"{ingredient.id}: {ingredient.amount_in_grams:.1f}, "
         sauce.kcal_100g=kcal_100g/amount_sum
         sauce.fat=fat/amount_sum
         sauce.saturated_fat=saturated_fat/amount_sum

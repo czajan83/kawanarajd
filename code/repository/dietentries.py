@@ -18,20 +18,13 @@ def get_dietentry(dietentry_id: str, db: Session) -> Type[DietEntryResponseModel
 
 def create_dietentry(body: DietEntryModel, db: Session) -> DietEntryResponseModel | int:
 
-    if body.entry_type == f"raw":
-        if rep_raws.search_raw_by_id(body.food_id, db) is None:
-            return -1
-    if body.entry_type == f"sauce":
-        if rep_sauces.search_sauce_by_id(body.food_id, db) is None:
-            return -1
-
-    try:
-        timestamp = datetime.strptime(body.added_at, f"%Y-%m-%d %H:%M")
-    except ValueError:
-        if body.added_at == "":
-            timestamp = datetime.now().strftime(f"%Y-%m-%d %H:%M")
-        else:
-            return -2
+    if body.entry_type == f"raw" and rep_raws.search_raw_by_id(body.food_id, db) is None:
+        return -1
+    if body.entry_type == f"sauce" and rep_sauces.search_sauce_by_id(body.food_id, db) is None:
+        return -2
+    timestamp = validate_timestamp(body)
+    if timestamp is None:
+        return -3
 
     id_dietentry = uuid.uuid4().hex
     dietentry = DietEntry(id=id_dietentry,
@@ -87,3 +80,13 @@ def search_dietentry(dietentry_id: str, db: Session):
         if dietentry.id == dietentry_id:
             return dietentry
     return None
+
+def validate_timestamp(body: DietEntryModel) -> str | None:
+    try:
+        timestamp = datetime.strptime(body.added_at, f"%Y-%m-%d %H:%M")
+    except ValueError:
+        if body.added_at == "":
+            timestamp = datetime.now().strftime(f"%Y-%m-%d %H:%M")
+        else:
+            return None
+    return timestamp

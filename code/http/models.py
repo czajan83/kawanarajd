@@ -44,3 +44,17 @@ class DietEntryModel(BaseModel):
 
 class DietEntryResponseModel(DietEntryModel):
     id: str
+
+class DishesModel(BaseModel):
+    name: str = Field(max_length=96)
+    kcal_100g: float
+    fat: float
+    saturated_fat: float
+    carbohydrates: float
+    simple_sugars: float
+    fiber: float
+    proteins: float
+    salt: float
+
+class DishesResponseModel(DishesModel):
+    id: int

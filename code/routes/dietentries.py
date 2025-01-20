@@ -29,8 +29,11 @@ def create_raw(body: DietEntryModel, db: Session = Depends(get_db)):
     dietentry = rep_dietentries.create_dietentry(body, db)
     if dietentry == -1:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                            detail="neither raw nor sauce found, please check your food_id")
+                            detail="raw not found, please check your food_id")
     if dietentry == -2:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                            detail=f"sauce not found, please check your food_id")
+    if dietentry == -3:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
                             detail=f"added_at format incorrect, please use the %Y-%m-%d %H:%M format "
                                    f"or left it blank if use datetime.now() func")

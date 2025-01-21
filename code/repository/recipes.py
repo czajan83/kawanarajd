@@ -1,8 +1,10 @@
+from sqlalchemy import and_
 from sqlalchemy.orm import Session
 
 from code.database.models import Recipes, Dishes
 from code.http.models import RecipesModel
 from code.repository import dishes as rep_dishes
+
 
 
 class RepRecipes:
@@ -42,7 +44,7 @@ class RepRecipes:
         if RepRecipes.validate_body(body=body) < 0:
             return -1
         dish = rep_dishes.search_dish_by_name(body.name, db)
-        
+
         if dish is None:
             if self.calculate_nutritional_values(body=body, db=db) < 0:
                 return -2
@@ -67,6 +69,50 @@ class RepRecipes:
                 db.add(recipe_db)
             db.commit()
         return body
+
+    def update_recipe(self, recipe_id: int, body: RecipesModel, db: Session) -> RecipesModel | int:
+
+        if RepRecipes.validate_body(body=body) < 0:
+            return -1
+        dish = rep_dishes.search_dish_by_id(recipe_id, db)
+        recipes = db.query(Recipes).filter(and_(Recipes.recipe_id == dish.id)).all()
+
+        if dish is not None:
+            if dish.name != body.name:
+                return -2
+            if self.calculate_nutritional_values(body=body, db=db) < 0:
+                return -4
+            dish.kcal_100g = self.kcal_100g
+            dish.fat = self.fat
+            dish.saturated_fat = self.saturated_fat
+            dish.carbohydrates = self.carbohydrates
+            dish.simple_sugars = self.simple_sugars
+            dish.fiber = self.fiber
+            dish.proteins = self.proteins
+            dish.salt = self.salt
+            db.commit()
+            for recipe_db in recipes:
+                db.delete(recipe_db)
+            db.commit()
+            for index, component_id in enumerate(body.recipe_ids):
+                recipe_db = Recipes(recipe_id=recipe_id,
+                                    component_id=body.recipe_ids[index],
+                                    amount=body.recipe_amounts[index])
+                db.add(recipe_db)
+            db.commit()
+        return body
+
+    @staticmethod
+    def remove_recipe(recipe_id: int, body: RecipesModel, db: Session) -> int:
+
+        dish = rep_dishes.search_dish_by_id(recipe_id, db)
+
+        if dish is not None:
+            if dish.name != body.name:
+                return -1
+            db.delete(dish)
+            db.commit()
+        return 0
 
     def calculate_nutritional_values(self, body: RecipesModel, db: Session) -> int:
 
@@ -104,47 +150,10 @@ class RepRecipes:
             return -2
         return 0
 
-    #     id_sauce = uuid.uuid4().hex
-    #
-    #     recipe = f""
-    #
+    @staticmethod
+    def search_recipes_by_dish_id(dish_id: int, db: Session):
+        return
 
-    #
-    #     sauce_http = SaucesResponseModel(id=id_sauce,
-    #                                      name=body.name,
-    #                                      ingredients=body.ingredients,
-    #                                      final_amount_in_grams=body.final_amount_in_grams
-    #     )
-    # else:
-    #     sauce_http = SaucesResponseModel(id=sauce.id,
-    #                                      name=body.name,
-    #                                      ingredients=body.ingredients,
-    #                                      final_amount_in_grams=body.final_amount_in_grams
-    #     )
-
-# def update_sauce(sauce_id: str, body: SaucesModel, db: Session) -> SaucesResponseModel | int:
-#     sauce = search_sauce_by_id(sauce_id, db)
-#     amount_sum = body.final_amount_in_grams
-#     if sauce is not None:
-#         if sauce.name != body.name:
-#             return -2
-#         kcal_100g = fat = saturated_fat = carbohydrates = simple_sugars = fiber = proteins = salt = 0
-#         sauce.kcal_100g=kcal_100g/amount_sum
-#         sauce.fat=fat/amount_sum
-#         sauce.saturated_fat=saturated_fat/amount_sum
-#         sauce.carbohydrates=carbohydrates/amount_sum
-#         sauce.simple_sugars=simple_sugars/amount_sum
-#         sauce.fiber=fiber/amount_sum
-#         sauce.proteins=proteins/amount_sum
-#         sauce.salt=salt/amount_sum
-#         db.commit()
-#         sauce_http = SaucesResponseModel(id=sauce.id,
-#                                          name=body.name,
-#                                          ingredients=body.ingredients,
-#                                          final_amount_in_grams=body.final_amount_in_grams
-#         )
-#         return sauce_http
-#     return -1
 #
 # def remove_sauce(sauce_id: str, body: SaucesModel, db: Session) -> int | None:
 #     existing_sauce = search_sauce_by_id(sauce_id, db)

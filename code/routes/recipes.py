@@ -36,20 +36,24 @@ def create_recipe(body: RecipesModel, db: Session = Depends(get_db)):
                                    "please check the recipe_ids")
     return recipes
 
-# @router.put("/{sauce_id}", response_model=SaucesResponseModel)
-# def put_sauce(sauce_id: str, body: SaucesModel, db: Session = Depends(get_db)):
-#     sauce = rep_sauces.update_sauce(sauce_id, body, db)
-#     if sauce == -1:
-#         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="sauce not found")
-#     if sauce == -2:
-#         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="sauce name incorrect")
-#     return sauce
-#
-# @router.delete("/{sauce_id}", response_model=List[SaucesResponseModel])
-# def delete_raw(sauce_id: str, body: SaucesModel, db: Session = Depends(get_db)):
-#     sauce = rep_sauces.remove_sauce(sauce_id, body, db)
-#     if sauce == -1:
-#         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="sauce not found")
-#     if sauce == -2:
-#         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="sauce name incorrect")
-#     return []
+@router.put("/{recipe_id}", response_model=RecipesModel)
+def put_recipe(recipe_id: int, body: RecipesModel, db: Session = Depends(get_db)):
+    recipe = RepRecipes()
+    recipes = recipe.update_recipe(recipe_id, body, db)
+    if recipes == -1:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="recipe not found")
+    if recipes == -2:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="recipe name incorrect")
+    if recipes == -3:
+        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE,
+                            detail="one or more components in recipe_ids list not found in database, "
+                                   "please check the recipe_ids")
+    return recipes
+
+@router.delete("/{recipe_id}")
+def put_recipe(recipe_id: int, body: RecipesModel, db: Session = Depends(get_db)):
+    recipe = RepRecipes()
+    recipes = recipe.remove_recipe(recipe_id, body, db)
+    if recipes == -1:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="recipe name incorrect")
+    return []

@@ -1,3 +1,5 @@
+from typing import List
+
 from sqlalchemy import and_
 from sqlalchemy.orm import Session
 
@@ -17,17 +19,27 @@ class RepRecipes:
     proteins = 0
     salt = 0
 
-# def get_sauces(db: Session) -> List[SaucesResponseModel]:
-#     sauces_db = db.query(Sauces).all()
-#     sauces_http = []
-#     for sauce_db in sauces_db:
-#         ingredients = extract_ingredients(sauce_db.recipe)
-#         sauces_http.append(SaucesResponseModel(id=sauce_db.id,
-#                                                name=sauce_db.name,
-#                                                ingredients=ingredients,
-#                                                final_amount_in_grams=sauce_db.final_amount_in_grams
-#         ))
-#     return sauces_http
+    @staticmethod
+    def get_recipes(db: Session) -> List[RecipesModel]:
+        recipes = []
+        recipes_db = db.query(Recipes).all()
+        recipes_ids = []
+        components_ids = []
+        amounts = []
+        for recipe_db in recipes_db:
+            recipes_ids.append(recipe_db.recipe_id)
+        recipes_ids_set = set(recipes_ids)
+        for recipe_id in recipes_ids_set:
+            dish_name = db.query(Dishes).filter(and_(Dishes.id == recipe_id)).first().name
+            for recipe_db in recipes_db:
+                if recipe_db.recipe_id == recipe_id:
+                    components_ids.append(recipe_db.component_id)
+                    amounts.append(recipe_db.amount)
+            recipes.append(RecipesModel(name=dish_name, recipe_ids=components_ids, recipe_amounts=amounts))
+            components_ids.clear()
+            amounts.clear()
+
+        return recipes
 #
 # def get_sauce(sauce_id: str, db: Session) -> SaucesResponseModel:
 #     sauce_db = search_sauce_by_id(sauce_id, db)
@@ -154,16 +166,6 @@ class RepRecipes:
     def search_recipes_by_dish_id(dish_id: int, db: Session):
         return
 
-#
-# def remove_sauce(sauce_id: str, body: SaucesModel, db: Session) -> int | None:
-#     existing_sauce = search_sauce_by_id(sauce_id, db)
-#     if existing_sauce is not None:
-#         if existing_sauce.name != body.name:
-#             return -2
-#         db.delete(existing_sauce)
-#         db.commit()
-#         return 0
-#     return -1
 #
 # def search_sauce_by_id(sauce_id: str, db: Session) -> Type[Sauces] | None:
 #     existing_sauces = db.query(Sauces).all()

@@ -1,3 +1,5 @@
+from typing import List
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from starlette import status
@@ -8,13 +10,14 @@ from code.repository.recipes import RepRecipes
 
 router = APIRouter(prefix="/recipes", tags=["recipes"])
 
-# @router.get("/", response_model=List[SaucesResponseModel])
-# def get_sauces(db: Session = Depends(get_db)):
-#     sauces = rep_sauces.get_sauces(db)
-#     if not sauces:
-#         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="sauces not found")
-#     return sauces
-#
+@router.get("/", response_model=List[RecipesModel])
+def get_recipes(db: Session = Depends(get_db)):
+    recipe = RepRecipes()
+    recipes = recipe.get_recipes(db)
+    if not recipes:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="recipes not found")
+    return recipes
+
 # @router.get("/{sauce_id}", response_model=SaucesResponseModel)
 # def get_raw(sauce_id: str, db: Session = Depends(get_db)):
 #     sauce = rep_sauces.get_sauce(sauce_id, db)

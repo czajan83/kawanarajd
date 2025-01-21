@@ -50,5 +50,3 @@ class RecipesModel(BaseModel):
     recipe_ids: List[int]
     recipe_amounts: List[int]
 
-class RecipesResponseModel(RecipesModel):
-    id: int

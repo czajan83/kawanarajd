@@ -1,16 +1,17 @@
-from sqlalchemy import Column, String, Float, ForeignKey, Integer
+from sqlalchemy import Column, String, Float, ForeignKey, Integer, DateTime, func
 from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
 
 class DietEntry(Base):
     __tablename__ = "dietentry"
-    id = Column(String(32), primary_key=True)
-    added_at = Column(String(24))
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    added_at = Column(DateTime, default=func.now())
     entry_type = Column(String(20))
-    food_id = Column(String(32))
+    food_id = Column(Integer, ForeignKey("dishes.id", ondelete="CASCADE"), unique=False)
     food_amount_in_grams = Column(Float)
     weight_in_kilograms = Column(Float)
+    distance_in_kilometers = Column(Float)
 
 class Dishes(Base):
     __tablename__ = "dishes"

@@ -1,17 +1,30 @@
+from datetime import datetime
 from typing import List
 
 from pydantic import BaseModel, Field
 
 
-class DietEntryModel(BaseModel):
-    added_at: str
-    entry_type: str
-    food_id: str
+class MealDEModel(BaseModel):
+    added_at: datetime
+    food_id: int
     food_amount_in_grams: float
+
+class MeasurementDEModel(BaseModel):
+    added_at: datetime
     weight_in_kilograms: float
 
-class DietEntryResponseModel(DietEntryModel):
-    id: str
+class ActivityDEModel(BaseModel):
+    added_at: datetime
+    distance_in_kilometers: float
+
+class DEResponseModel(BaseModel):
+    id: int
+    added_at: datetime
+    entry_type: str
+    food_id: int
+    food_amount_in_grams: float
+    weight_in_kilograms: float
+    distance_in_kilometers: float
 
 class DishesModel(BaseModel):
     name: str = Field(max_length=96)

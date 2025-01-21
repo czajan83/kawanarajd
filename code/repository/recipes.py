@@ -22,10 +22,11 @@ class RepRecipes:
     @staticmethod
     def get_recipes(db: Session) -> List[RecipesModel]:
         recipes = []
-        recipes_db = db.query(Recipes).all()
         recipes_ids = []
         components_ids = []
         amounts = []
+
+        recipes_db = db.query(Recipes).all()
         for recipe_db in recipes_db:
             recipes_ids.append(recipe_db.recipe_id)
         recipes_ids_set = set(recipes_ids)
@@ -40,6 +41,26 @@ class RepRecipes:
             amounts.clear()
 
         return recipes
+
+    @staticmethod
+    def get_recipe(recipe_id: int, db: Session) -> RecipesModel | None:
+
+        components_ids = []
+        amounts = []
+
+        recipes_db = db.query(Recipes).all()
+        dish_name = db.query(Dishes).filter(and_(Dishes.id == recipe_id)).first()
+        if dish_name is None:
+            return None
+        for recipe_db in recipes_db:
+            if recipe_db.recipe_id == recipe_id:
+                components_ids.append(recipe_db.component_id)
+                amounts.append(recipe_db.amount)
+        recipe = RecipesModel(name=dish_name.name, recipe_ids=components_ids, recipe_amounts=amounts)
+        components_ids.clear()
+        amounts.clear()
+
+        return recipe
 #
 # def get_sauce(sauce_id: str, db: Session) -> SaucesResponseModel:
 #     sauce_db = search_sauce_by_id(sauce_id, db)

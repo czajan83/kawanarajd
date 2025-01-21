@@ -39,3 +39,10 @@ class Dishes(Base):
     fiber = Column(Float)
     proteins = Column(Float, nullable=False)
     salt = Column(Float, nullable=False)
+
+class Recipes(Base):
+    __tablename__ = "recipes"
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    recipe_id = Column(Integer, ForeignKey("dishes.id", ondelete="CASCADE"), unique=False, nullable=False)
+    component_id = Column(Integer, ForeignKey("dishes.id", ondelete="CASCADE"), unique=False, nullable=False)
+    amount = Column(Integer, nullable=False)

@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, ClassVar, Type
 
 from datetime import datetime
 from pydantic import BaseModel, Field
@@ -14,6 +14,7 @@ class SaucesModel(BaseModel):
     name: str = Field(max_length=96)
     ingredients: List[Ingredient]
     final_amount_in_grams: float
+
     class Config:
         arbitrary_types_allowed = True
 
@@ -42,4 +43,12 @@ class DishesModel(BaseModel):
     salt: float
 
 class DishesResponseModel(DishesModel):
+    id: int
+
+class RecipesModel(BaseModel):
+    name: str = Field(max_length=96)
+    recipe_ids: List[int]
+    recipe_amounts: List[int]
+
+class RecipesResponseModel(RecipesModel):
     id: int

@@ -6,7 +6,6 @@ from sqlalchemy.orm import Session
 
 from code.database.models import DietEntry
 from code.http.models import DietEntryModel, DietEntryResponseModel
-from code.repository import sauces as rep_sauces
 
 
 def get_dietentries(db: Session) -> List[Type[DietEntryResponseModel]]:
@@ -17,8 +16,6 @@ def get_dietentry(dietentry_id: str, db: Session) -> Type[DietEntryResponseModel
 
 def create_dietentry(body: DietEntryModel, db: Session) -> DietEntryResponseModel | int:
 
-    if body.entry_type == f"sauce" and rep_sauces.search_sauce_by_id(body.food_id, db) is None:
-        return -2
     timestamp = validate_timestamp(body)
     if timestamp is None:
         return -3

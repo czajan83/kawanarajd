@@ -1,25 +1,7 @@
-from typing import List, ClassVar, Type
+from typing import List
 
-from datetime import datetime
 from pydantic import BaseModel, Field
 
-
-class Ingredient(BaseModel):
-    id: str
-    amount_in_grams: float
-    class Config:
-        orm_mode = True
-
-class SaucesModel(BaseModel):
-    name: str = Field(max_length=96)
-    ingredients: List[Ingredient]
-    final_amount_in_grams: float
-
-    class Config:
-        arbitrary_types_allowed = True
-
-class SaucesResponseModel(SaucesModel):
-    id: str
 
 class DietEntryModel(BaseModel):
     added_at: str

@@ -58,6 +58,8 @@ def put_recipe(recipe_id: int, body: RecipesModel, db: Session = Depends(get_db)
 def put_recipe(recipe_id: int, body: RecipesModel, db: Session = Depends(get_db)):
     recipe_obj = RepRecipes()
     recipes = recipe_obj.remove_recipe(recipe_id, body, db)
+    if recipes == -2:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="recipe not found")
     if recipes == -1:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="recipe name incorrect")
     return []

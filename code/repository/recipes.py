@@ -25,7 +25,6 @@ class RepRecipes:
         recipes_ids = []
         components_ids = []
         amounts = []
-
         recipes_db = db.query(Recipes).all()
         for recipe_db in recipes_db:
             recipes_ids.append(recipe_db.recipe_id)
@@ -39,15 +38,12 @@ class RepRecipes:
             recipes.append(RecipesModel(name=dish_name, recipe_ids=components_ids, recipe_amounts=amounts))
             components_ids.clear()
             amounts.clear()
-
         return recipes
 
     @staticmethod
     def get_recipe(recipe_id: int, db: Session) -> RecipesModel | None:
-
         components_ids = []
         amounts = []
-
         recipes_db = db.query(Recipes).all()
         dish_name = db.query(Dishes).filter(and_(Dishes.id == recipe_id)).first()
         if dish_name is None:
@@ -59,25 +55,12 @@ class RepRecipes:
         recipe = RecipesModel(name=dish_name.name, recipe_ids=components_ids, recipe_amounts=amounts)
         components_ids.clear()
         amounts.clear()
-
         return recipe
-#
-# def get_sauce(sauce_id: str, db: Session) -> SaucesResponseModel:
-#     sauce_db = search_sauce_by_id(sauce_id, db)
-#     ingredients = extract_ingredients(sauce_db.recipe)
-#     sauce_http = SaucesResponseModel(id=sauce_db.id,
-#                                     name=sauce_db.name,
-#                                     ingredients=ingredients,
-#                                     final_amount_in_grams=sauce_db.final_amount_in_grams
-#     )
-#     return sauce_http
 
     def create_recipe(self, body: RecipesModel, db: Session) -> RecipesModel | int:
-
         if RepRecipes.validate_body(body=body) < 0:
             return -1
         dish = rep_dishes.search_dish_by_name(body.name, db)
-
         if dish is None:
             if self.calculate_nutritional_values(body=body, db=db) < 0:
                 return -2
@@ -94,7 +77,6 @@ class RepRecipes:
             db.commit()
             db.refresh(dish_db)
             dish_db_added = rep_dishes.search_dish_by_name(body.name, db)
-
             for index, component_id in enumerate(body.recipe_ids):
                 recipe_db = Recipes(recipe_id=dish_db_added.id,
                                     component_id=body.recipe_ids[index],
@@ -104,12 +86,10 @@ class RepRecipes:
         return body
 
     def update_recipe(self, recipe_id: int, body: RecipesModel, db: Session) -> RecipesModel | int:
-
         if RepRecipes.validate_body(body=body) < 0:
             return -1
         dish = rep_dishes.search_dish_by_id(recipe_id, db)
         recipes = db.query(Recipes).filter(and_(Recipes.recipe_id == dish.id)).all()
-
         if dish is not None:
             if dish.name != body.name:
                 return -2
@@ -137,14 +117,13 @@ class RepRecipes:
 
     @staticmethod
     def remove_recipe(recipe_id: int, body: RecipesModel, db: Session) -> int:
-
         dish = rep_dishes.search_dish_by_id(recipe_id, db)
-
-        if dish is not None:
-            if dish.name != body.name:
-                return -1
-            db.delete(dish)
-            db.commit()
+        if dish is None:
+            return -2
+        if dish.name != body.name:
+            return -1
+        db.delete(dish)
+        db.commit()
         return 0
 
     def calculate_nutritional_values(self, body: RecipesModel, db: Session) -> int:

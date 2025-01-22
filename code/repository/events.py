@@ -9,8 +9,10 @@ from code.http.models import EventsResponseModel, EventsModel
 def get_events(db: Session) -> List[Type[EventsResponseModel]]:
     return db.query(Events).all()
 
+
 def get_event(event_id: int, db: Session) -> Type[EventsResponseModel]:
     return search_event(event_id, db)
+
 
 def create_event(body: EventsModel, db: Session) -> EventsResponseModel:
     event = Events(event_at=body.event_at,
@@ -22,6 +24,7 @@ def create_event(body: EventsModel, db: Session) -> EventsResponseModel:
     db.commit()
     db.refresh(event)
     return event
+
 
 def update_event(event_id: int, body: EventsModel, db: Session) -> Type[EventsResponseModel] | int:
     event = search_event(event_id, db)
@@ -35,6 +38,25 @@ def update_event(event_id: int, body: EventsModel, db: Session) -> Type[EventsRe
     db.commit()
     return event
 
+
+def update_kawanarajd_status(event_id, body, db):
+    event = search_event(event_id, db)
+    if event is None:
+        return -1
+    event.kawanarajd = body.kawanarajd
+    db.commit()
+    return event
+
+
+def update_coffees_served_status(event_id, body, db):
+    event = search_event(event_id, db)
+    if event is None:
+        return -1
+    event.coffees_served = body.coffees_served
+    db.commit()
+    return event
+
+
 def remove_event(event_id: int, db: Session) -> int | None:
     event = search_event(event_id, db)
     if event is None:
@@ -42,6 +64,7 @@ def remove_event(event_id: int, db: Session) -> int | None:
     db.delete(event)
     db.commit()
     return None
+
 
 def search_event(event_id: int, db: Session) -> Type[Events] | None:
     events = db.query(Events).all()

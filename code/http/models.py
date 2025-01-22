@@ -54,3 +54,9 @@ class EventsModel(BaseModel):
 
 class EventsResponseModel(EventsModel):
     id: int
+
+class EventsKawanarajdUpdate(BaseModel):
+    kawanarajd: bool
+
+class EventsCoffeesServedUpdate(BaseModel):
+    coffees_served: int

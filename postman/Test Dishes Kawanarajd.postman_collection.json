@@ -1,0 +1,1043 @@
+{
+	"info": {
+		"_postman_id": "d4ec4408-2ccc-461b-a66a-85b3d6de9e97",
+		"name": "Test Dishes Kawanarajd",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "29686392"
+	},
+	"item": [
+		{
+			"name": "post dish from csv file",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.collectionVariables.set(\"dish_name\", pm.variables.get('dish_name'))\r",
+							"pm.collectionVariables.set(\"kcal_100g\", pm.variables.get('kcal_100g'))\r",
+							"pm.collectionVariables.set(\"fat\", pm.variables.get('fat'))\r",
+							"pm.collectionVariables.set(\"saturated_fat\", pm.variables.get('saturated_fat'))\r",
+							"pm.collectionVariables.set(\"carbohydrates\", pm.variables.get('carbohydrates'))\r",
+							"pm.collectionVariables.set(\"simple_sugars\", pm.variables.get('simple_sugars'))\r",
+							"pm.collectionVariables.set(\"fiber\", pm.variables.get('fiber'))\r",
+							"pm.collectionVariables.set(\"proteins\", pm.variables.get('proteins'))\r",
+							"pm.collectionVariables.set(\"salt\", pm.variables.get('salt'))\r",
+							"\r",
+							"var body = {\r",
+							"  \"name\": pm.variables.get('dish_name'),\r",
+							"  \"kcal_100g\": pm.variables.get('kcal_100g'),\r",
+							"  \"fat\": pm.variables.get('fat'),\r",
+							"  \"saturated_fat\": pm.variables.get('saturated_fat'),\r",
+							"  \"carbohydrates\": pm.variables.get('carbohydrates'),\r",
+							"  \"simple_sugars\": pm.variables.get('simple_sugars'),\r",
+							"  \"fiber\": pm.variables.get('fiber'),\r",
+							"  \"proteins\": pm.variables.get('proteins'),\r",
+							"  \"salt\": pm.variables.get('salt'),\r",
+							"}\r",
+							"\r",
+							"var body_str = JSON.stringify(body)\r",
+							"\r",
+							"pm.environment.set('request_body', body_str)"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							" pm.test('Code response eql 201', () => {\r",
+							"     pm.expect(pm.response.code).to.eql(201)\r",
+							" });\r",
+							"\r",
+							"const responseBody = pm.response.json()\r",
+							"\r",
+							"pm.test(\"Response body name form csv file\", () => {\r",
+							"    pm.expect(responseBody.name).to.eql(pm.collectionVariables.get(\"dish_name\"))\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Response body kcal_100g form csv file\", () => {\r",
+							"    pm.expect(responseBody.kcal_100g).to.eql(pm.collectionVariables.get(\"kcal_100g\"))\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Response body fat form csv file\", () => {\r",
+							"    pm.expect(responseBody.fat).to.eql(pm.collectionVariables.get(\"fat\"))\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Response body saturated_fat form csv file\", () => {\r",
+							"    pm.expect(responseBody.saturated_fat).to.eql(pm.collectionVariables.get(\"saturated_fat\"))\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Response body carbohydrates form csv file\", () => {\r",
+							"    pm.expect(responseBody.carbohydrates).to.eql(pm.collectionVariables.get(\"carbohydrates\"))\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Response body simple sugars form csv file\", () => {\r",
+							"    pm.expect(responseBody.simple_sugars).to.eql(pm.collectionVariables.get(\"simple_sugars\"))\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Response body fiber form csv file\", () => {\r",
+							"    pm.expect(responseBody.fiber).to.eql(pm.collectionVariables.get(\"fiber\"))\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Response body proteins form csv file\", () => {\r",
+							"    pm.expect(responseBody.proteins).to.eql(pm.collectionVariables.get(\"proteins\"))\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Response body salt form csv file\", () => {\r",
+							"    pm.expect(responseBody.salt).to.eql(pm.collectionVariables.get(\"salt\"))\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Response body id to be a number\", () => {\r",
+							"    pm.expect(responseBody.id).to.be.a(\"number\")\r",
+							"})\r",
+							"\r",
+							"pm.collectionVariables.set(\"dish_id\", responseBody.id)\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{{request_body}}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}dishes",
+					"host": [
+						"{{baseUrl}}dishes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get dish just after add",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							" pm.test('Code response eql 200', () => {\r",
+							"     pm.expect(pm.response.code).to.eql(200)\r",
+							" });\r",
+							"\r",
+							"const responseBody = pm.response.json()\r",
+							"\r",
+							"pm.test(\"Response body name form csv file\", () => {\r",
+							"    pm.expect(responseBody.name).to.eql(pm.collectionVariables.get(\"dish_name\"))\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Response body kcal_100g form csv file\", () => {\r",
+							"    pm.expect(responseBody.kcal_100g).to.eql(pm.collectionVariables.get(\"kcal_100g\"))\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Response body fat form csv file\", () => {\r",
+							"    pm.expect(responseBody.fat).to.eql(pm.collectionVariables.get(\"fat\"))\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Response body saturated_fat form csv file\", () => {\r",
+							"    pm.expect(responseBody.saturated_fat).to.eql(pm.collectionVariables.get(\"saturated_fat\"))\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Response body carbohydrates form csv file\", () => {\r",
+							"    pm.expect(responseBody.carbohydrates).to.eql(pm.collectionVariables.get(\"carbohydrates\"))\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Response body simple sugars form csv file\", () => {\r",
+							"    pm.expect(responseBody.simple_sugars).to.eql(pm.collectionVariables.get(\"simple_sugars\"))\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Response body fiber form csv file\", () => {\r",
+							"    pm.expect(responseBody.fiber).to.eql(pm.collectionVariables.get(\"fiber\"))\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Response body proteins form csv file\", () => {\r",
+							"    pm.expect(responseBody.proteins).to.eql(pm.collectionVariables.get(\"proteins\"))\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Response body salt form csv file\", () => {\r",
+							"    pm.expect(responseBody.salt).to.eql(pm.collectionVariables.get(\"salt\"))\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Response body id equals reques id\", () => {\r",
+							"    pm.expect(responseBody.id).to.eql(pm.collectionVariables.get(\"dish_id\"))\r",
+							"})\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}dishes/{{dish_id}}",
+					"host": [
+						"{{baseUrl}}dishes"
+					],
+					"path": [
+						"{{dish_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "put dish number values to 0",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var body = {\r",
+							"  \"name\": pm.variables.get('dish_name'),\r",
+							"  \"kcal_100g\": 0,\r",
+							"  \"fat\": 0,\r",
+							"  \"saturated_fat\": 0,\r",
+							"  \"carbohydrates\": 0,\r",
+							"  \"simple_sugars\": 0,\r",
+							"  \"fiber\": 0,\r",
+							"  \"proteins\": 0,\r",
+							"  \"salt\": 0,\r",
+							"}\r",
+							"\r",
+							"var body_str = JSON.stringify(body)\r",
+							"\r",
+							"pm.environment.set('request_body', body_str)\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							" pm.test('Code response eql 200', () => {\r",
+							"     pm.expect(pm.response.code).to.eql(200)\r",
+							" });\r",
+							"\r",
+							"const responseBody = pm.response.json()\r",
+							"\r",
+							"pm.test(\"Response body name form csv file\", () => {\r",
+							"    pm.expect(responseBody.name).to.eql(pm.collectionVariables.get(\"dish_name\"))\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Response body kcal_100g equals 0\", () => {\r",
+							"    pm.expect(responseBody.kcal_100g).to.eql(0)\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Response body fat equals 0\", () => {\r",
+							"    pm.expect(responseBody.fat).to.eql(0)\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Response body saturated_fat equals 0\", () => {\r",
+							"    pm.expect(responseBody.saturated_fat).to.eql(0)\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Response body carbohydrates equals 0\", () => {\r",
+							"    pm.expect(responseBody.carbohydrates).to.eql(0)\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Response body simple sugars equals 0\", () => {\r",
+							"    pm.expect(responseBody.simple_sugars).to.eql(0)\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Response body fiber equals 0\", () => {\r",
+							"    pm.expect(responseBody.fiber).to.eql(0)\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Response body proteins equals 0\", () => {\r",
+							"    pm.expect(responseBody.proteins).to.eql(0)\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Response body salt equals 0\", () => {\r",
+							"    pm.expect(responseBody.salt).to.eql(0)\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Response body id equals request dish_id\", () => {\r",
+							"    pm.expect(responseBody.id).to.eql(pm.collectionVariables.get(\"dish_id\"))\r",
+							"})\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{{request_body}}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}dishes/{{dish_id}}",
+					"host": [
+						"{{baseUrl}}dishes"
+					],
+					"path": [
+						"{{dish_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get dish after zeroing values Copy",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							" pm.test('Code response eql 200', () => {\r",
+							"     pm.expect(pm.response.code).to.eql(200)\r",
+							" });\r",
+							"\r",
+							"const responseBody = pm.response.json()\r",
+							"\r",
+							"pm.test(\"Response body name form csv file\", () => {\r",
+							"    pm.expect(responseBody.name).to.eql(pm.collectionVariables.get(\"dish_name\"))\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Response body kcal_100g equals 0\", () => {\r",
+							"    pm.expect(responseBody.kcal_100g).to.eql(0)\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Response body fat equals 0\", () => {\r",
+							"    pm.expect(responseBody.fat).to.eql(0)\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Response body saturated_fat equals 0\", () => {\r",
+							"    pm.expect(responseBody.saturated_fat).to.eql(0)\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Response body carbohydrates equals 0\", () => {\r",
+							"    pm.expect(responseBody.carbohydrates).to.eql(0)\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Response body simple sugars equals 0\", () => {\r",
+							"    pm.expect(responseBody.simple_sugars).to.eql(0)\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Response body fiber equals 0\", () => {\r",
+							"    pm.expect(responseBody.fiber).to.eql(0)\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Response body proteins equals 0\", () => {\r",
+							"    pm.expect(responseBody.proteins).to.eql(0)\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Response body salt equals 0\", () => {\r",
+							"    pm.expect(responseBody.salt).to.eql(0)\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Response body id equals request dish_id\", () => {\r",
+							"    pm.expect(responseBody.id).to.eql(pm.collectionVariables.get(\"dish_id\"))\r",
+							"})\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}dishes/{{dish_id}}",
+					"host": [
+						"{{baseUrl}}dishes"
+					],
+					"path": [
+						"{{dish_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "change dish name",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							" pm.test('Code response eql 409', () => {\r",
+							"     pm.expect(pm.response.code).to.eql(409)\r",
+							" });\r",
+							"\r",
+							"pm.test('Status equals Conflict', () => {\r",
+							"    pm.expect(pm.response.status).to.eql(\"Conflict\")\r",
+							"})\r",
+							"\r",
+							"let resBody = pm.response.json()\r",
+							"\r",
+							"pm.test('Detail of error equails: \\\"dish name incorrect\\\"', () => {\r",
+							"    pm.expect(resBody.detail).to.eql(\"dish name incorrect\")\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"wrong name\",\r\n  \"kcal_100g\": 0,\r\n  \"fat\": 0,\r\n  \"saturated_fat\": 0,\r\n  \"carbohydrates\": 0,\r\n  \"simple_sugars\": 0,\r\n  \"fiber\": 0,\r\n  \"proteins\": 0,\r\n  \"salt\": 0\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}dishes/{{dish_id}}",
+					"host": [
+						"{{baseUrl}}dishes"
+					],
+					"path": [
+						"{{dish_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "change non-existent dish",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							" pm.test('Code response eql 404', () => {\r",
+							"     pm.expect(pm.response.code).to.eql(404)\r",
+							" });\r",
+							"\r",
+							"pm.test('Status equals \\\"Not found\\\"', () => {\r",
+							"    pm.expect(pm.response.status).to.eql(\"Not Found\")\r",
+							"})\r",
+							"\r",
+							"let resBody = pm.response.json()\r",
+							"\r",
+							"pm.test('Detail of error equails: \\\"dish not found\\\"', () => {\r",
+							"    pm.expect(resBody.detail).to.eql(\"dish not found\")\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"wrong name\",\r\n  \"kcal_100g\": 0,\r\n  \"fat\": 0,\r\n  \"saturated_fat\": 0,\r\n  \"carbohydrates\": 0,\r\n  \"simple_sugars\": 0,\r\n  \"fiber\": 0,\r\n  \"proteins\": 0,\r\n  \"salt\": 0\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}dishes/999999999999999",
+					"host": [
+						"{{baseUrl}}dishes"
+					],
+					"path": [
+						"999999999999999"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get all dishes",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							" pm.test('Code response eql 200', () => {\r",
+							"     pm.expect(pm.response.code).to.eql(200)\r",
+							" });\r",
+							"\r",
+							"const responseBody = pm.response.json()\r",
+							"console.log(responseBody.length)\r",
+							"\r",
+							"pm.collectionVariables.set(\"dishes_length\", responseBody.length)\r",
+							"\r",
+							"pm.test(\"At least one element in response body\", () => {\r",
+							"    pm.expect(responseBody.length).to.gt(0)\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}dishes",
+					"host": [
+						"{{baseUrl}}dishes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete incorrect dish",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							" pm.test('Code response eql 409', () => {\r",
+							"     pm.expect(pm.response.code).to.eql(409)\r",
+							" });\r",
+							"\r",
+							"pm.test('Status equals Conflict', () => {\r",
+							"    pm.expect(pm.response.status).to.eql(\"Conflict\")\r",
+							"})\r",
+							"\r",
+							"let resBody = pm.response.json()\r",
+							"\r",
+							"pm.test('Detail of error equails: \\\"dish name incorrect\\\"', () => {\r",
+							"    pm.expect(resBody.detail).to.eql(\"dish name incorrect\")\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"wrong name\",\r\n  \"kcal_100g\": 0,\r\n  \"fat\": 0,\r\n  \"saturated_fat\": 0,\r\n  \"carbohydrates\": 0,\r\n  \"simple_sugars\": 0,\r\n  \"fiber\": 0,\r\n  \"proteins\": 0,\r\n  \"salt\": 0\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}dishes/{{dish_id}}",
+					"host": [
+						"{{baseUrl}}dishes"
+					],
+					"path": [
+						"{{dish_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get all dishes after deleting incorrect dish",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							" pm.test('Code response eql 200', () => {\r",
+							"     pm.expect(pm.response.code).to.eql(200)\r",
+							" });\r",
+							"\r",
+							"const responseBody = pm.response.json()\r",
+							"\r",
+							"pm.test(\"The same amount of dishes like before deleting incorrect dish\", () => {\r",
+							"    pm.expect(pm.collectionVariables.get(\"dishes_length\") - responseBody.length).to.eql(0)\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}dishes",
+					"host": [
+						"{{baseUrl}}dishes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete non-existent dish",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							" pm.test('Code response eql 404', () => {\r",
+							"     pm.expect(pm.response.code).to.eql(404)\r",
+							" });\r",
+							"\r",
+							"pm.test('Status equals \\\"Not found\\\"', () => {\r",
+							"    pm.expect(pm.response.status).to.eql(\"Not Found\")\r",
+							"})\r",
+							"\r",
+							"let resBody = pm.response.json()\r",
+							"\r",
+							"pm.test('Detail of error equails: \\\"dish not found\\\"', () => {\r",
+							"    pm.expect(resBody.detail).to.eql(\"dish not found\")\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"wrong name\",\r\n  \"kcal_100g\": 0,\r\n  \"fat\": 0,\r\n  \"saturated_fat\": 0,\r\n  \"carbohydrates\": 0,\r\n  \"simple_sugars\": 0,\r\n  \"fiber\": 0,\r\n  \"proteins\": 0,\r\n  \"salt\": 0\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}dishes/999999999999999",
+					"host": [
+						"{{baseUrl}}dishes"
+					],
+					"path": [
+						"999999999999999"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get all dishes after deleting non-existent dish",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							" pm.test('Code response eql 200', () => {\r",
+							"     pm.expect(pm.response.code).to.eql(200)\r",
+							" });\r",
+							"\r",
+							"const responseBody = pm.response.json()\r",
+							"\r",
+							"pm.test(\"The same amount of dishes like before deleting incorrect dish\", () => {\r",
+							"    pm.expect(pm.collectionVariables.get(\"dishes_length\") - responseBody.length).to.eql(0)\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}dishes",
+					"host": [
+						"{{baseUrl}}dishes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete dish",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var body = {\r",
+							"  \"name\": pm.variables.get('dish_name'),\r",
+							"  \"kcal_100g\": 0,\r",
+							"  \"fat\": 0,\r",
+							"  \"saturated_fat\": 0,\r",
+							"  \"carbohydrates\": 0,\r",
+							"  \"simple_sugars\": 0,\r",
+							"  \"fiber\": 0,\r",
+							"  \"proteins\": 0,\r",
+							"  \"salt\": 0,\r",
+							"}\r",
+							"\r",
+							"var body_str = JSON.stringify(body)\r",
+							"\r",
+							"pm.environment.set('request_body', body_str)\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							" pm.test('Code response eql 200', () => {\r",
+							"     pm.expect(pm.response.code).to.eql(200)\r",
+							" });\r",
+							"\r",
+							"pm.test('Status equals \\\"OK\\\"', () => {\r",
+							"    pm.expect(pm.response.status).to.eql(\"OK\")\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{{request_body}}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}dishes/{{dish_id}}",
+					"host": [
+						"{{baseUrl}}dishes"
+					],
+					"path": [
+						"{{dish_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get all dishes after successful delete of dish",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const responseBody = pm.response.json()\r",
+							"let responseCode = pm.response.code\r",
+							"\r",
+							"if(responseCode == 200)\r",
+							"{ \r",
+							"    pm.test('Code response eql 200', () => {\r",
+							"        pm.expect(pm.response.code).to.eql(200)\r",
+							"    });\r",
+							"\r",
+							"    pm.test(\"Less amount of dishes like before deleting incorrect dish\", () => {\r",
+							"        pm.expect(pm.collectionVariables.get(\"dishes_length\") - responseBody.length).to.gt(0)\r",
+							"    })\r",
+							"}\r",
+							"else\r",
+							"    pm.test('Code response eql 404', () => {\r",
+							"        pm.expect(pm.response.code).to.eql(404)\r",
+							"    });\r",
+							"\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}dishes",
+					"host": [
+						"{{baseUrl}}dishes"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "dish_name",
+			"value": ""
+		},
+		{
+			"key": "kcal_100g",
+			"value": ""
+		},
+		{
+			"key": "fat",
+			"value": ""
+		},
+		{
+			"key": "saturated_fat",
+			"value": ""
+		},
+		{
+			"key": "carbohydrates",
+			"value": ""
+		},
+		{
+			"key": "simple_sugars",
+			"value": ""
+		},
+		{
+			"key": "fiber",
+			"value": ""
+		},
+		{
+			"key": "proteins",
+			"value": ""
+		},
+		{
+			"key": "salt",
+			"value": ""
+		},
+		{
+			"key": "dish_id",
+			"value": ""
+		},
+		{
+			"key": "dishes_length",
+			"value": ""
+		}
+	]
+}

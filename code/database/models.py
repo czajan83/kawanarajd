@@ -40,4 +40,4 @@ class Events(Base):
     organizer_name = Column(String(50))
     event_name = Column(String(50))
     kawanarajd = Column(Boolean)
-    coffees_issued = Column(Integer)
+    coffees_served = Column(Integer)

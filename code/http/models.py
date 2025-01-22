@@ -45,12 +45,12 @@ class DEResponseModel(BaseModel):
     weight_in_kilograms: float
     distance_in_kilometers: float
 
-class EventModel(BaseModel):
+class EventsModel(BaseModel):
     event_at: date
     organizer_name: str
     event_name: str
     kawanarajd: bool
-    coffees_issued: int
+    coffees_served: int
 
-class EventReponseModel(EventModel):
+class EventsResponseModel(EventsModel):
     id: int

@@ -55,7 +55,7 @@ def put_recipe(recipe_id: int, body: RecipesModel, db: Session = Depends(get_db)
     return recipes
 
 @router.delete("/{recipe_id}")
-def put_recipe(recipe_id: int, body: RecipesModel, db: Session = Depends(get_db)):
+def delete_recipe(recipe_id: int, body: RecipesModel, db: Session = Depends(get_db)):
     recipe_obj = RepRecipes()
     recipes = recipe_obj.remove_recipe(recipe_id, body, db)
     if recipes == -2:

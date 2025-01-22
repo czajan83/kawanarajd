@@ -1,8 +1,27 @@
-from datetime import datetime
+from datetime import datetime, date
 from typing import List
 
 from pydantic import BaseModel, Field
 
+
+class DishesModel(BaseModel):
+    name: str = Field(max_length=96)
+    kcal_100g: float
+    fat: float
+    saturated_fat: float
+    carbohydrates: float
+    simple_sugars: float
+    fiber: float
+    proteins: float
+    salt: float
+
+class DishesResponseModel(DishesModel):
+    id: int
+
+class RecipesModel(BaseModel):
+    name: str = Field(max_length=96)
+    recipe_ids: List[int]
+    recipe_amounts: List[int]
 
 class MealDEModel(BaseModel):
     added_at: datetime
@@ -26,22 +45,12 @@ class DEResponseModel(BaseModel):
     weight_in_kilograms: float
     distance_in_kilometers: float
 
-class DishesModel(BaseModel):
-    name: str = Field(max_length=96)
-    kcal_100g: float
-    fat: float
-    saturated_fat: float
-    carbohydrates: float
-    simple_sugars: float
-    fiber: float
-    proteins: float
-    salt: float
+class EventModel(BaseModel):
+    event_at: date
+    organizer_name: str
+    event_name: str
+    kawanarajd: bool
+    coffees_issued: int
 
-class DishesResponseModel(DishesModel):
+class EventReponseModel(EventModel):
     id: int
-
-class RecipesModel(BaseModel):
-    name: str = Field(max_length=96)
-    recipe_ids: List[int]
-    recipe_amounts: List[int]
-

@@ -23,3 +23,10 @@ def get_dietentry(dietentry_id: int, db: Session = Depends(get_db)):
     if dietentry is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="dietentry not found")
     return dietentry
+
+@router.delete("/{dietentry_id}", response_model=List[DEResponseModel])
+def delete_dietentry(dietentry_id: int, db: Session = Depends(get_db)):
+    dietentry = rep_dietentries.remove_dietentry(dietentry_id, db)
+    if dietentry is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="dietentry not found")
+    return []

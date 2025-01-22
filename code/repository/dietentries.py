@@ -14,7 +14,7 @@ def get_dietentries(db: Session) -> List[Type[DEResponseModel]]:
 def get_dietentry(dietentry_id: int, db: Session) -> Type[DEResponseModel]:
     return search_dietentry(dietentry_id, db)
 
-def add_meal(body: MealDEModel, db: Session) -> DEResponseModel | int:
+def create_meal(body: MealDEModel, db: Session) -> DEResponseModel | int:
     dish = rep_dishes.search_dish_by_id(body.food_id, db)
     if dish is None:
         return -1
@@ -42,13 +42,65 @@ def update_meal(dietentry_id: int, body: MealDEModel, db: Session) -> Type[DietE
     db.commit()
     return dietentry
 
-def add_mesurement(body: MeasurementDEModel, db: Session) -> DEResponseModel | int:
-    meal = DietEntry(added_at=body.added_at, entry_type="measurement", food_id=body.food_id, food_amount_in_grams=body.food_amount_in_grams, weight_in_kilograms=body.weight_in_kilograms, distance_in_kilometers=body.distance_in_kilometers)
-    return save_in_db(meal, db)
+def create_measurement(body: MeasurementDEModel, db: Session) -> DEResponseModel | int:
+    measurement_dish = rep_dishes.search_dish_by_name("measurement", db)
+    if measurement_dish is None:
+        return -1
+    measurement = DietEntry(added_at=body.added_at,
+                            entry_type="measurement",
+                            food_id=measurement_dish.id,
+                            food_amount_in_grams=0,
+                            weight_in_kilograms=body.weight_in_kilograms,
+                            distance_in_kilometers=0)
+    return save_in_db(measurement, db)
 
-def add_activity(body: ActivityDEModel, db: Session) -> DEResponseModel | int:
-    meal = DietEntry(added_at=body.added_at, entry_type="activity", food_id=body.food_id, food_amount_in_grams=body.food_amount_in_grams, weight_in_kilograms=body.weight_in_kilograms, distance_in_kilometers=body.distance_in_kilometers)
-    return save_in_db(meal, db)
+def update_measurement(dietentry_id: int, body: MeasurementDEModel, db: Session) -> Type[DietEntry] | int:
+    dietentry = search_dietentry(dietentry_id=dietentry_id, db=db)
+    measurement_dish = rep_dishes.search_dish_by_name("measurement", db)
+    if dietentry is None:
+        return -2
+    if dietentry.entry_type != "measurement":
+        return -3
+    if measurement_dish is None:
+        return -1
+    dietentry.added_at = body.added_at
+    dietentry.weight_in_kilograms = body.weight_in_kilograms
+    db.commit()
+    return dietentry
+
+def create_activity(body: ActivityDEModel, db: Session) -> DEResponseModel | int:
+    activity_dish = rep_dishes.search_dish_by_name("activity", db)
+    if activity_dish is None:
+        return -1
+    activity = DietEntry(added_at=body.added_at,
+                         entry_type="activity",
+                         food_id=activity_dish.id,
+                         food_amount_in_grams=0,
+                         weight_in_kilograms=0,
+                         distance_in_kilometers=body.distance_in_kilometers)
+    return save_in_db(activity, db)
+
+def update_activity(dietentry_id: int, body: ActivityDEModel, db: Session) -> Type[DietEntry] | int:
+    dietentry = search_dietentry(dietentry_id=dietentry_id, db=db)
+    activity_dish = rep_dishes.search_dish_by_name("activity", db)
+    if dietentry is None:
+        return -2
+    if dietentry.entry_type != "activity":
+        return -3
+    if activity_dish is None:
+        return -1
+    dietentry.added_at = body.added_at
+    dietentry.distance_in_kilometers = body.distance_in_kilometers
+    db.commit()
+    return dietentry
+
+def remove_dietentry(dietentry_id: int, db: Session) -> int | None:
+    dietentry = search_dietentry(dietentry_id, db)
+    if dietentry is None:
+        return None
+    db.delete(dietentry)
+    db.commit()
+    return 0
 
 def search_dietentry(dietentry_id: int, db: Session) -> Type[DietEntry] | None:
     existing_dietentries = db.query(DietEntry).all()

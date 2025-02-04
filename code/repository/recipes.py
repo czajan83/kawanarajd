@@ -3,9 +3,9 @@ from typing import List
 from sqlalchemy import and_
 from sqlalchemy.orm import Session
 
-from code.database.models import Recipes, Dishes
-from code.http.models import RecipesModel
-from code.repository import dishes as rep_dishes
+from ..database.models import Recipes, Dishes
+from ..http.models import RecipesModel
+from ..repository import dishes as rep_dishes
 
 
 

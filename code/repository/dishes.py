@@ -2,8 +2,8 @@ from typing import List, Type
 
 from sqlalchemy.orm import Session
 
-from code.database.models import Dishes
-from code.http.models import DishesResponseModel, DishesModel
+from ..database.models import Dishes
+from ..http.models import DishesResponseModel, DishesModel
 
 
 def get_dishes(db: Session) -> List[Type[DishesResponseModel]]:

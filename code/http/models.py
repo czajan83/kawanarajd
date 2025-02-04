@@ -6,14 +6,14 @@ from pydantic import BaseModel, Field
 
 class DishesModel(BaseModel):
     name: str = Field(max_length=96)
-    kcal_100g: float
-    fat: float
-    saturated_fat: float
-    carbohydrates: float
-    simple_sugars: float
-    fiber: float
-    proteins: float
-    salt: float
+    kcal_100g: float = 0
+    fat: float = 0
+    saturated_fat: float = 0
+    carbohydrates: float = 0
+    simple_sugars: float = 0
+    fiber: float = 0
+    proteins: float = 0
+    salt: float = 0
 
 class DishesResponseModel(DishesModel):
     id: int

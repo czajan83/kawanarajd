@@ -4,9 +4,9 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from starlette import status
 
-from code.database.database import get_db
-from code.http.models import DishesModel, DishesResponseModel
-from code.repository import dishes as rep_dishes
+from ..database.database import get_db
+from ..http.models import DishesModel, DishesResponseModel
+from ..repository import dishes as rep_dishes
 
 router = APIRouter(prefix="/dishes", tags=["dishes"])
 
